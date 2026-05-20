@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom"; 
+import { Link, useLocation, useNavigate } from "react-router-dom"; 
 import { dummyProfileData } from "../assets/assets";
 import { MenuIcon, UserIcon, XIcon, ChevronRightIcon, LogOutIcon } from "lucide-react"; 
 import { 
@@ -25,7 +25,6 @@ const Sidebar = () => {
     setMobileOpen(false);
   }, [pathname]);
 
-
   const role = dummyProfileData.role || "EMPLOYEE"; 
 
   const navItems = [
@@ -36,7 +35,6 @@ const Sidebar = () => {
     {name: "Payslips", href: "/payslips", icon: DollarSignIcon},
     {name: "Settings", href: "/settings", icon: SettingsIcon},
   ];
-
 
   const handleLogout = () => {
     localStorage.removeItem("token"); 
@@ -60,7 +58,6 @@ const Sidebar = () => {
             </div>
           </div>
           {/* Close button on mobile */}
-          {/* FIX: Added aria-label for accessibility */}
           <button
             onClick={() => setMobileOpen(false)}
             aria-label="Close navigation menu"
@@ -87,6 +84,7 @@ const Sidebar = () => {
           </div>
         </div>
       )}
+
       {/* Section label */}
       <div className='px-5 pt-5 pb-2'>
           <p className='text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500'>Navigation</p>
@@ -133,7 +131,6 @@ const Sidebar = () => {
 
       {/* Logout */}
       <div className="p-3 border-t border-white/6">
-        {/* FIX (Ln 131-137): Changed 'hover-bg-rose-500/8' to 'hover:bg-rose-500/8' */}
         <button 
           onClick={handleLogout} 
           className="flex items-center gap-3 w-full px-3 py-2.5 rounded-md text-[13px] font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/8 transition-all duration-150"
@@ -148,7 +145,6 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile hamburger button */}
-      {/* FIX: Added aria-label for accessibility */}
       <button
         onClick={() => setMobileOpen(true)}
         aria-label="Open navigation menu"
