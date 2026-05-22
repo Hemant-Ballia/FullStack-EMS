@@ -43,7 +43,7 @@ const LoginForm = ({role, title, subtitle}) => {
           <form className='space-y-5' onSubmit={handleSubmit}>
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className='block text-sm font-medium text-slate-700 mb-2'>Email address</label>
+              <label className='block text-sm font-medium text-slate-700 mb-2'>Email address</label>
               <input 
                 id="email"
                 type="email" 
@@ -57,12 +57,10 @@ const LoginForm = ({role, title, subtitle}) => {
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className='block text-sm font-medium text-slate-700 mb-2'>Password</label>
+              <label className='block text-sm font-medium text-slate-700 mb-2'>Password</label>
               <div className='relative'>
                 <input 
-                  id="password"
                   type={showPassword ? 'text' : 'password'} 
-                  value={password}
                   onChange={(e)=> setPassword(e.target.value)} 
                   required 
                   placeholder='••••••••'
@@ -70,8 +68,6 @@ const LoginForm = ({role, title, subtitle}) => {
                 />
                 <button 
                   type='button' 
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  aria-pressed={showPassword}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" 
                   onClick={() => setShowPassword(!showPassword)}
                 >
