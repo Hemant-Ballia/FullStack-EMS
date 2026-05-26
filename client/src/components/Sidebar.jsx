@@ -6,7 +6,7 @@ import {
     LayoutGridIcon, 
     CalendarIcon, 
     FileTextIcon, 
-    DollarSignIcon, 
+   IndianRupeeIcon, 
     SettingsIcon 
 } from "lucide-react";
 
@@ -25,14 +25,15 @@ const Sidebar = () => {
     setMobileOpen(false);
   }, [pathname]);
 
-  const role = dummyProfileData.role || "EMPLOYEE"; 
+  const role = "" || "EMPLOYEE"; 
 
   const navItems = [
     {name: "Dashboard", href: "/dashboard", icon: LayoutGridIcon},
-    role === "ADMIN" ? {name: "Employees", href: "/employees", icon: UserIcon} : null,
+    role === "ADMIN" ?
+    {name: "Employees", href: "/employees", icon: UserIcon} :
     {name: "Attendance", href: "/attendance", icon: CalendarIcon},
     {name: "Leave", href: "/leave", icon: FileTextIcon},
-    {name: "Payslips", href: "/payslips", icon: DollarSignIcon},
+   {name: "Payslips", href: "/payslips", icon: IndianRupeeIcon},
     {name: "Settings", href: "/settings", icon: SettingsIcon},
   ];
 
@@ -92,18 +93,13 @@ const Sidebar = () => {
 
       {/* Navigation List */}
       <div className='flex-1 px-3 space-y-0.5 overflow-y-auto'>
-        {navItems.map((item) => {
-          if (!item) return null;
-          
-          const isActive = item.href === '/' 
-            ? pathname === '/' 
-            : pathname.startsWith(item.href);
-
+        {navItems.map((item) => {  
+         const isActive = pathname.startsWith(item.href);
           return (
             <Link 
               to={item.href} 
-              key={item.href}
-              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150 ${
+              key={item.name}
+              className={`group relative flex items-center gap-3 px-3 py-2.5 rounded-md text-[13px] font-medium transition-all duration-150  ${
                 isActive 
                   ? "bg-indigo-500/12 text-indigo-300" 
                   : "text-slate-300 hover:bg-white/4 hover:text-white"
@@ -154,12 +150,12 @@ const Sidebar = () => {
       </button>
 
       {/* Mobile overlay */}
-      {mobileOpen && (
+      {mobileOpen && 
         <div
           className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
           onClick={() => setMobileOpen(false)}
         />
-      )}
+      }
 
       {/* Sidebar - desktop */}
       <aside
