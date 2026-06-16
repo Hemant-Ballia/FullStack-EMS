@@ -10,20 +10,27 @@ import {
   PalmtreeIcon,
   PlusIcon,
 } from "lucide-react";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const Leave = () => {
+  const {user} = useAuth();
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
-  const isAdmin = false; // Change to true to test admin view
+  const isAdmin = user?.role === "ADMIN";
 
-  const fetchLeaves = useCallback(() => {
-    setLeaves(dummyLeaveData);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, []);
+ const fetchLeaves = useCallback(async () => {
+  try {
+    const res = await api.get("/leave");
+    setLeaves(res.data.data || []);
+    if (res.data.employee?.isDeleted) setIsDeleted(true);
+  } catch (error) {
+    toast.error(error?.response?.data?.error || error.message);
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchLeaves();

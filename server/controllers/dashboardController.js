@@ -11,38 +11,41 @@ export const getDashboard = async (req, res) => {
         const session = req.session;
 
         if (session.role === "ADMIN") {
-            const [totalEmployees, todayAttendance, pendingLeaves] = await Promise.all([
-                Employee.countDocuments({ isDeleted: { $ne: true } }),
+            const [totalEmployees, todayAttendance, pendingLeaves] =
+                await Promise.all([
+                    Employee.countDocuments({ isDeleted: { $ne: true } }),
 
-                Attendance.countDocuments({
-                    date: {
-                        $gte: new Date(new Date().setHours(0, 0, 0, 0)),
-                        $lt: new Date(new Date().setHours(24, 0, 0, 0)),
-                    },
-                }),
+                    Attendance.countDocuments({
+                        date: {
+                            $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+                            $lt: new Date(new Date().setHours(24, 0, 0, 0)),
+                        },
+                    }),
 
-                LeaveApplication.countDocuments({ status: "PENDING" }),
-            ]);
+                    LeaveApplication.countDocuments({ status: "PENDING" }),
+                ]);
 
             return res.json({
                 role: "ADMIN",
                 totalEmployees,
-                todayDepartments: DEPARTMENTS.length,
+                totalDepartments: DEPARTMENTS.length,
                 todayAttendance,
                 pendingLeaves,
             });
-        } else {
-            const employee = await Employee.findOne({
-                userId: session.userId,
-            }).lean();
+        }
 
-            if (!employee) {
-                return res.status(404).json({ error: "Employee not found" });
-            }
+        const employee = await Employee.findOne({
+            userId: session.userId,
+        }).lean();
 
-            const today = new Date();
+        if (!employee) {
+            return res.status(404).json({ error: "Employee not found" });
+        }
 
-            const [currentMonthAttendance, pendingLeaves, latestPayslip] = await Promise.all([
+        const today = new Date();
+
+        const [currentMonthAttendance, pendingLeaves, latestPayslip] =
+            await Promise.all([
                 Attendance.countDocuments({
                     employeeId: employee._id,
                     date: {
@@ -61,18 +64,17 @@ export const getDashboard = async (req, res) => {
                     .lean(),
             ]);
 
-            return res.json({
-                role: "EMPLOYEE",
-                employee: { ...employee, id: employee._id.toString() },
-                currentMonthAttendance,
-                pendingLeaves,
-                latestPayslip: latestPayslip
-                    ? { ...latestPayslip, id: latestPayslip._id.toString() }
-                    : null,
-            });
-        }
+        return res.json({
+            role: "EMPLOYEE",
+            employee: { ...employee, id: employee._id.toString() },
+            currentMonthAttendance,
+            pendingLeaves,
+            latestPayslip: latestPayslip
+                ? { ...latestPayslip, id: latestPayslip._id.toString() }
+                : null,
+        });
     } catch (error) {
         console.error("Dashboard error:", error);
-        return res.status(500).json({ error: "Failed" });
+        return res.status(500).json({ error: "Failed to load dashboard" });
     }
 };

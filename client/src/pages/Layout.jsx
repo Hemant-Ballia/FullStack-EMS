@@ -1,8 +1,14 @@
 import Sidebar from "../components/Sidebar.jsx"
-import { Outlet } from "react-router-dom"
-
+import { Navigate,Outlet } from "react-router-dom"
+import { useAuth } from "../context/AuthContext.jsx"
+import Loading from "../components/Loading.jsx"
 
 const Layout = () => {
+  const { user, loading } = useAuth()
+
+if(loading) return <Loading />
+if(!user) return <Navigate to="/login"/>
+
   return (
    <div className="flex h-screen bg-linear-to-br from-slate-50 via-white to-indigo-50/30">
   <Sidebar/>

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Plus, X, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { Download } from "lucide-react";
+import api from "../../api/axios.js";
+import { toast } from "react-hot-toast";
 
 const GeneratePayslipForm = ({ employees, onSuccess }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,9 +18,25 @@ const GeneratePayslipForm = ({ employees, onSuccess }) => {
         <Plus className="w-4 h-4" /> Generate Payslip
       </button>
     );
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  };
+
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  const formData = new FormData(e.currentTarget);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    await api.post("/payslips", data);
+    setIsOpen(false);
+    onSuccess();
+  } catch (err) {
+    toast.error(err.response?.data?.error || err?.message);
+  }
+
+  setLoading(false);
+};
+
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="card max-w-lg w-full p-6 animate-slide-up">
